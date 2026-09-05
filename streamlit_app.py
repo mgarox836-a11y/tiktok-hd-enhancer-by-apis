@@ -181,7 +181,7 @@ st.markdown("""
 
 st.markdown("""
     <div>
-        <span class="y2k-tag">💾 SYSTEM_READY // ANIMATED_UI</span>
+        <span class="y2k-tag">💾 TIKTOK VIDEO ENHANCED BY APIS</span>
     </div>
 """, unsafe_allow_html=True)
 
