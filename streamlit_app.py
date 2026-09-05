@@ -14,7 +14,7 @@ st.set_page_config(
     layout="centered"
 )
 
-# Custom CSS Neo-Brutalism Aman
+# Custom CSS Neo-Brutalism (Fix Total Uploader Overlap)
 st.markdown("""
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,7 +25,7 @@ st.markdown("""
             font-family: 'Space Grotesk', sans-serif !important;
         }
 
-        /* Latar Belakang */
+        /* Latar Belakang Web */
         .stApp {
             background-color: #f4f0ea !important;
         }
@@ -81,10 +81,42 @@ st.markdown("""
             margin-bottom: 24px;
         }
 
-        /* Tombol Utama Neo-Brutalism */
+        /* PERBAIKAN TOTAL AREA FILE UPLOADER */
+        section[data-testid="stFileUploader"] {
+            background-color: #ffffff !important;
+            border: 2.5px dashed #000000 !important;
+            border-radius: 12px !important;
+            padding: 10px !important;
+        }
+
+        section[data-testid="stFileUploader"] > label {
+            color: #000000 !important;
+            font-weight: 800 !important;
+            font-size: 13px !important;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        /* Merapikan Tombol Unggah Bawaan Streamlit */
+        div[data-testid="stFileUploaderDropzone"] {
+            background-color: #f8fafc !important;
+            border: none !important;
+        }
+
+        button[data-testid="baseButton-secondary"] {
+            background-color: #ffde59 !important;
+            color: #000000 !important;
+            border: 2px solid #000000 !important;
+            border-radius: 8px !important;
+            box-shadow: 2px 2px 0px #000000 !important;
+            font-weight: 800 !important;
+            text-transform: uppercase !important;
+        }
+
+        /* Tombol Utama (Proses & Download) */
         div.stButton > button, div.stDownloadButton > button {
             width: 100% !important;
-            margin-top: 12px !important;
+            margin-top: 14px !important;
             padding: 14px !important;
             border: 3px solid #000000 !important;
             border-radius: 12px !important;
@@ -127,7 +159,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Elemen UI
+# UI Elements
 st.markdown("""
     <div class="badge-wrapper">
         <span class="neo-badge">⚡ BUILT BY APIS</span>
@@ -137,7 +169,7 @@ st.markdown("""
 st.markdown('<div class="main-title">TikTok Quality</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">Bypass kompresi TikTok ke 1080p 60FPS tanpa re-encoding.</div>', unsafe_allow_html=True)
 
-uploaded_file = st.file_uploader("Upload file video (MP4 / MOV):", type=["mp4", "mov"])
+uploaded_file = st.file_uploader("Pilih file MP4 / MOV:", type=["mp4", "mov"])
 
 if uploaded_file is not None:
     input_path = "temp_input.mp4"
