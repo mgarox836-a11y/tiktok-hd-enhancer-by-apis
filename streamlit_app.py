@@ -76,6 +76,17 @@ st.markdown("""
             padding-bottom: 4px;
         }
 
+        /* Kotak Peringatan / Tips */
+        .tips-box {
+            background: rgba(255, 0, 127, 0.1);
+            border: 2px dashed #ff007f;
+            padding: 12px;
+            margin-top: 14px;
+            font-size: 12px;
+            color: #ffccff;
+            line-height: 1.4;
+        }
+
         [data-testid="stFileUploader"] {
             width: 100% !important;
             border: 3px dashed #ff007f !important;
@@ -113,29 +124,33 @@ st.markdown("""
             color: #ff99ff !important;
         }
 
-        div.stButton > button, div.stDownloadButton > button {
+        /* Tombol Aksi Utama & Link Button */
+        div.stButton > button, div.stLinkButton > a, div.stDownloadButton > button {
             width: 100% !important;
-            margin-top: 16px !important;
+            margin-top: 14px !important;
             padding: 14px !important;
             border: 3px solid #000000 !important;
             border-radius: 0px !important;
             background: #00ffcc !important;
             color: #000000 !important;
-            font-size: 14px !important;
+            font-size: 13px !important;
             font-weight: 800 !important;
             text-transform: uppercase !important;
+            text-align: center !important;
+            text-decoration: none !important;
             box-shadow: 4px 4px 0px #ff007f !important;
+            display: block !important;
             transition: none !important;
         }
 
-        div.stButton > button:hover, div.stDownloadButton > button:hover {
+        div.stButton > button:hover, div.stLinkButton > a:hover, div.stDownloadButton > button:hover {
             background: #ff007f !important;
             color: #ffffff !important;
             box-shadow: 4px 4px 0px #00ffcc !important;
             transform: translate(-2px, -2px);
         }
         
-        div.stButton > button:active, div.stDownloadButton > button:active {
+        div.stButton > button:active, div.stLinkButton > a:active, div.stDownloadButton > button:active {
             transform: translate(2px, 2px) !important;
             box-shadow: 2px 2px 0px #ff007f !important;
         }
@@ -144,17 +159,27 @@ st.markdown("""
 
 st.markdown("""
     <div>
-        <span class="y2k-tag">💾 SYSTEM_READY // SECURE_MODE</span>
+        <span class="y2k-tag">💾 SYSTEM_READY // OPTIMIZED</span>
     </div>
 """, unsafe_allow_html=True)
 
 st.markdown('<div class="main-title">TikTok Quality</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">Bypass kompresi otomatis ke resolusi 1080p 60FPS tanpa re-encoding.</div>', unsafe_allow_html=True)
 
-# Batasan ukuran file maksimal (Contoh: 150 MB)
+# Batasan ukuran file maksimal (150 MB)
 MAX_FILE_SIZE_MB = 150
 
 uploaded_file = st.file_uploader("Seret dan letakkan file video (MP4 / MOV) di sini", type=["mp4", "mov"])
+
+# Kotak Tips & Peringatan di bawah uploader
+st.markdown("""
+    <div class="tips-box">
+        💡 <b>TIPS SERVER:</b> Gunakan video berdurasi pendek (di bawah 2 menit). Jika ukuran file video Anda terlalu besar/berat, disarankan untuk mengompresnya terlebih dahulu agar pemrosesan berjalan lancar dan cepat!
+    </div>
+""", unsafe_allow_html=True)
+
+# Tombol link langsung ke videocompress.ai/id
+st.link_button("🌐 COMPRESS VIDEO DI SINI (RECOMMENDED)", "https://videocompress.ai/id")
 
 if uploaded_file is not None:
     # Validasi ukuran file
