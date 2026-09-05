@@ -185,7 +185,7 @@ st.markdown("""
 
 st.markdown("""
     <div>
-        <span class="y2k-tag">💾 SYSTEM_READY // FULL_PROTECTION</span>
+        <span class="y2k-tag">💾 TIKTOK VIDEO ENHANCE BY APIS</span>
     </div>
 """, unsafe_allow_html=True)
 
@@ -198,7 +198,7 @@ uploaded_file = st.file_uploader("Seret dan letakkan file video (MP4 / MOV) di s
 
 st.markdown("""
     <div class="tips-box">
-        💡 <b>TIPS SERVER:</b> Gunakan video berdurasi pendek (di bawah 2 menit). Jika ukuran file video Anda terlalu besar/berat, disarankan untuk mengompresnya terlebih dahulu agar pemrosesan berjalan lancar dan cepat!
+        💡 <b>TIPS JIKA INGIN CEPAT PROSES:</b> Gunakan video berdurasi pendek (di bawah 2 menit). Jika ukuran file video Anda terlalu besar/berat, disarankan untuk mengompresnya terlebih dahulu agar pemrosesan berjalan lancar dan cepat!
     </div>
 """, unsafe_allow_html=True)
 
