@@ -2,6 +2,7 @@ import streamlit as st
 import os
 import time
 import uuid
+import threading
 
 try:
     from tiktok_quality.transform import transform
@@ -13,6 +14,10 @@ st.set_page_config(
     page_icon="💾",
     layout="wide"
 )
+
+# --- PENGAMAN ANTREAN SERVER (SEMAPHORE) ---
+# Batasi maksimal hanya 2 video yang diproses bersamaan di server agar tidak crash
+process_lock = threading.Semaphore(2)
 
 def cleanup_old_temp_files(max_age_minutes=15):
     current_time = time.time()
@@ -139,7 +144,6 @@ st.markdown("""
             color: #ff99ff !important;
         }
 
-        /* --- ANIMASI TOMBOL Y2K RETRO --- */
         @keyframes pulseGlow {
             0% { box-shadow: 4px 4px 0px #ff007f; }
             50% { box-shadow: 6px 6px 12px #00ffcc, 4px 4px 0px #ff007f; }
@@ -181,7 +185,7 @@ st.markdown("""
 
 st.markdown("""
     <div>
-        <span class="y2k-tag">💾 TIKTOK VIDEO ENHANCED BY APIS</span>
+        <span class="y2k-tag">💾 SYSTEM_READY // FULL_PROTECTION</span>
     </div>
 """, unsafe_allow_html=True)
 
@@ -194,7 +198,7 @@ uploaded_file = st.file_uploader("Seret dan letakkan file video (MP4 / MOV) di s
 
 st.markdown("""
     <div class="tips-box">
-        💡 <b>TIPS :</b> Gunakan video berdurasi pendek (di bawah 2 menit). Jika ukuran file video Anda terlalu besar/berat, disarankan untuk mengompresnya terlebih dahulu agar pemrosesan berjalan lancar dan cepat!
+        💡 <b>TIPS SERVER:</b> Gunakan video berdurasi pendek (di bawah 2 menit). Jika ukuran file video Anda terlalu besar/berat, disarankan untuk mengompresnya terlebih dahulu agar pemrosesan berjalan lancar dan cepat!
     </div>
 """, unsafe_allow_html=True)
 
@@ -214,31 +218,39 @@ if uploaded_file is not None:
             f.write(uploaded_file.getbuffer())
 
         if st.button("PROSES VIDEO SEKARANG"):
-            if os.path.exists(output_path):
-                os.remove(output_path)
+            # Cek apakah kapasitas server penuh menangani pengguna lain
+            if not process_lock.acquire(blocking=False):
+                st.warning("⚠️ Server sedang sibuk memproses video pengguna lain. Harap tunggu sebentar dan coba lagi ya!")
+            else:
+                try:
+                    if os.path.exists(output_path):
+                        os.remove(output_path)
 
-            with st.spinner("Memproses video..."):
-                success = False
-                if transform is not None:
-                    try:
-                        transform(input_path, output_path)
-                        if os.path.exists(output_path) and os.path.getsize(output_path) > 0:
-                            success = True
-                    except Exception as e:
-                        st.warning(f"Error: {str(e)}")
+                    with st.spinner("Memproses video..."):
+                        success = False
+                        if transform is not None:
+                            try:
+                                transform(input_path, output_path)
+                                if os.path.exists(output_path) and os.path.getsize(output_path) > 0:
+                                    success = True
+                            except Exception as e:
+                                st.warning(f"Error: {str(e)}")
 
-                if success:
-                    st.success("✨ Video berhasil dioptimasi!")
-                    st.video(output_path)
-                    with open(output_path, "rb") as file:
-                        st.download_button(
-                            label="UNDUH VIDEO HD",
-                            data=file,
-                            file_name=f"HD_{uploaded_file.name}",
-                            mime="video/mp4"
-                        )
-                    
-                    if os.path.exists(input_path):
-                        os.remove(input_path)
-                else:
-                    st.error("❌ Gagal memproses video.")
+                        if success:
+                            st.success("✨ Video berhasil dioptimasi!")
+                            st.video(output_path)
+                            with open(output_path, "rb") as file:
+                                st.download_button(
+                                    label="UNDUH VIDEO HD",
+                                    data=file,
+                                    file_name=f"HD_{uploaded_file.name}",
+                                    mime="video/mp4"
+                                )
+                            
+                            if os.path.exists(input_path):
+                                os.remove(input_path)
+                        else:
+                            st.error("❌ Gagal memproses video.")
+                finally:
+                    # Wajib lepaskan kunci agar antrean berikutnya bisa masuk
+                    process_lock.release()
