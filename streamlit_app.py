@@ -1,7 +1,7 @@
 import streamlit as st
 import os
 
-# Pustaka internal pemrosesan video (Python Murni)
+# Pustaka internal pemrosesan video
 try:
     from tiktok_quality.transform import transform
 except ImportError:
@@ -14,7 +14,7 @@ st.set_page_config(
     layout="centered"
 )
 
-# Custom CSS Neo-Brutalism
+# Custom CSS Neo-Brutalism Aman
 st.markdown("""
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,7 +25,7 @@ st.markdown("""
             font-family: 'Space Grotesk', sans-serif !important;
         }
 
-        /* Latar Belakang Warna Pastel Neo-Brutalism */
+        /* Latar Belakang */
         .stApp {
             background-color: #f4f0ea !important;
         }
@@ -34,14 +34,14 @@ st.markdown("""
         .stDeployButton {display:none !important;}
         div[data-testid="stDecoration"] {display:none !important;}
 
-        /* Container Kartu Utamanya (Neo-Brutalism Style) */
+        /* Container Kartu Neo-Brutalism */
         .block-container {
             max-width: 480px !important;
             padding: 36px 28px !important;
             background: #ffffff !important;
-            border: 3px solid #000000 !important;
-            border-radius: 16px !important;
-            box-shadow: 6px 6px 0px #000000 !important;
+            border: 3.5px solid #000000 !important;
+            border-radius: 18px !important;
+            box-shadow: 8px 8px 0px #000000 !important;
             margin-top: 2.5rem !important;
             margin-bottom: 2.5rem !important;
         }
@@ -56,7 +56,7 @@ st.markdown("""
             color: #000000;
             font-weight: 800;
             font-size: 11px;
-            padding: 4px 12px;
+            padding: 5px 12px;
             border: 2px solid #000000;
             border-radius: 6px;
             box-shadow: 2px 2px 0px #000000;
@@ -81,18 +81,10 @@ st.markdown("""
             margin-bottom: 24px;
         }
 
-        /* Styling Uploader Streamlit versi Neo-Brutalism */
-        div[data-testid="stFileUploader"] {
-            border: 3px dashed #000000 !important;
-            border-radius: 12px !important;
-            padding: 12px !important;
-            background: #fffbdf !important;
-        }
-
-        /* Tombol Utama Neo-Brutalism (Tombol Hitam dengan Shadow Kuning/Hitam) */
+        /* Tombol Utama Neo-Brutalism */
         div.stButton > button, div.stDownloadButton > button {
             width: 100% !important;
-            margin-top: 16px !important;
+            margin-top: 12px !important;
             padding: 14px !important;
             border: 3px solid #000000 !important;
             border-radius: 12px !important;
@@ -135,7 +127,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Elemen UI Neo-Brutalism
+# Elemen UI
 st.markdown("""
     <div class="badge-wrapper">
         <span class="neo-badge">⚡ BUILT BY APIS</span>
@@ -145,7 +137,7 @@ st.markdown("""
 st.markdown('<div class="main-title">TikTok Quality</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">Bypass kompresi TikTok ke 1080p 60FPS tanpa re-encoding.</div>', unsafe_allow_html=True)
 
-uploaded_file = st.file_uploader("UPLOAD FILE MP4 / MOV", type=["mp4", "mov"])
+uploaded_file = st.file_uploader("Upload file video (MP4 / MOV):", type=["mp4", "mov"])
 
 if uploaded_file is not None:
     input_path = "temp_input.mp4"
@@ -158,7 +150,7 @@ if uploaded_file is not None:
         if os.path.exists(output_path):
             os.remove(output_path)
 
-        with st.spinner("Sedang memproses file..."):
+        with st.spinner("Sedang memproses..."):
             success = False
             
             if transform is not None:
@@ -167,10 +159,10 @@ if uploaded_file is not None:
                     if os.path.exists(output_path) and os.path.getsize(output_path) > 0:
                         success = True
                 except Exception as e:
-                    st.warning(f"Metadata video tidak cocok: {str(e)}")
+                    st.warning(f"Note: {str(e)}")
 
             if success:
-                st.success("✨ Selesai! Video siap diunduh.")
+                st.success("✨ Pemrosesan berhasil!")
                 st.video(output_path)
 
                 with open(output_path, "rb") as file:
@@ -181,7 +173,7 @@ if uploaded_file is not None:
                         mime="video/mp4"
                     )
             else:
-                st.error("❌ Video tidak kompatibel. Gunakan file video mentah langsung dari galeri.")
+                st.error("❌ Gagal memproses video.")
 
 # Footer Neo-Brutalism
 st.markdown("""
