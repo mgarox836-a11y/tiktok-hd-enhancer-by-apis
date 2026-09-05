@@ -1,7 +1,7 @@
 import streamlit as st
 import os
 
-# Pustaka internal pemrosesan video
+# Import pustaka tiktok_quality
 try:
     from tiktok_quality.transform import transform
 except ImportError:
@@ -14,7 +14,7 @@ st.set_page_config(
     layout="centered"
 )
 
-# Custom CSS Neo-Brutalism (Fix Total Uploader Overlap)
+# Custom CSS Neo-Brutalism (HANYA untuk background, kartu, & tombol utama)
 st.markdown("""
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,7 +34,7 @@ st.markdown("""
         .stDeployButton {display:none !important;}
         div[data-testid="stDecoration"] {display:none !important;}
 
-        /* Container Kartu Neo-Brutalism */
+        /* Container Kartu Utama Neo-Brutalism */
         .block-container {
             max-width: 480px !important;
             padding: 36px 28px !important;
@@ -81,39 +81,7 @@ st.markdown("""
             margin-bottom: 24px;
         }
 
-        /* PERBAIKAN TOTAL AREA FILE UPLOADER */
-        section[data-testid="stFileUploader"] {
-            background-color: #ffffff !important;
-            border: 2.5px dashed #000000 !important;
-            border-radius: 12px !important;
-            padding: 10px !important;
-        }
-
-        section[data-testid="stFileUploader"] > label {
-            color: #000000 !important;
-            font-weight: 800 !important;
-            font-size: 13px !important;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-        }
-
-        /* Merapikan Tombol Unggah Bawaan Streamlit */
-        div[data-testid="stFileUploaderDropzone"] {
-            background-color: #f8fafc !important;
-            border: none !important;
-        }
-
-        button[data-testid="baseButton-secondary"] {
-            background-color: #ffde59 !important;
-            color: #000000 !important;
-            border: 2px solid #000000 !important;
-            border-radius: 8px !important;
-            box-shadow: 2px 2px 0px #000000 !important;
-            font-weight: 800 !important;
-            text-transform: uppercase !important;
-        }
-
-        /* Tombol Utama (Proses & Download) */
+        /* Tombol Utama Neo-Brutalism */
         div.stButton > button, div.stDownloadButton > button {
             width: 100% !important;
             margin-top: 14px !important;
@@ -138,11 +106,6 @@ st.markdown("""
             color: #ffffff !important;
         }
 
-        div.stButton > button:active, div.stDownloadButton > button:active {
-            transform: translate(2px, 2px) !important;
-            box-shadow: 2px 2px 0px #ff3131 !important;
-        }
-
         /* Footer */
         .neo-footer {
             display: flex;
@@ -159,7 +122,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# UI Elements
+# Elemen UI Header
 st.markdown("""
     <div class="badge-wrapper">
         <span class="neo-badge">⚡ BUILT BY APIS</span>
@@ -169,7 +132,8 @@ st.markdown("""
 st.markdown('<div class="main-title">TikTok Quality</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">Bypass kompresi TikTok ke 1080p 60FPS tanpa re-encoding.</div>', unsafe_allow_html=True)
 
-uploaded_file = st.file_uploader("Pilih file MP4 / MOV:", type=["mp4", "mov"])
+# File Uploader Murni Tanpa Modifikasi CSS Internal
+uploaded_file = st.file_uploader("Pilih file video (MP4 / MOV):", type=["mp4", "mov"])
 
 if uploaded_file is not None:
     input_path = "temp_input.mp4"
@@ -191,7 +155,7 @@ if uploaded_file is not None:
                     if os.path.exists(output_path) and os.path.getsize(output_path) > 0:
                         success = True
                 except Exception as e:
-                    st.warning(f"Note: {str(e)}")
+                    st.warning(f"Catatan: {str(e)}")
 
             if success:
                 st.success("✨ Pemrosesan berhasil!")
@@ -207,7 +171,7 @@ if uploaded_file is not None:
             else:
                 st.error("❌ Gagal memproses video.")
 
-# Footer Neo-Brutalism
+# Footer
 st.markdown("""
     <div class="neo-footer">
         <span>BY APIS</span>
