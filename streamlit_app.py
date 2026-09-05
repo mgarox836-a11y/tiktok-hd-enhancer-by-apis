@@ -8,15 +8,14 @@ try:
 except ImportError:
     transform = None
 
+# Ubah layout menjadi 'wide' agar memenuhi layar
 st.set_page_config(
     page_title="TikTok Quality — Y2K Retro",
     page_icon="💾",
-    layout="centered"
+    layout="wide"
 )
 
-# --- FUNGSI AUTO-CLEAN FILE SAMPAH YANG TERBENGKALAI ---
 def cleanup_old_temp_files(max_age_minutes=15):
-    """Menghapus file temp_* berumur lebih dari max_age_minutes menit untuk menghemat penyimpanan server."""
     current_time = time.time()
     max_age_seconds = max_age_minutes * 60
     
@@ -24,17 +23,14 @@ def cleanup_old_temp_files(max_age_minutes=15):
         for filename in os.listdir("."):
             if filename.startswith("temp_input_") or filename.startswith("temp_output_"):
                 file_path = os.path.join(".", filename)
-                # Cek umur file berdasarkan waktu modifikasi terakhir
                 file_mod_time = os.path.getmtime(file_path)
                 if (current_time - file_mod_time) > max_age_seconds:
                     os.remove(file_path)
     except Exception:
         pass
 
-# Jalankan pembersihan otomatis setiap halaman dimuat
 cleanup_old_temp_files(max_age_minutes=15)
 
-# Buat ID unik untuk setiap sesi browser pengguna agar file tidak saling menimpa
 if "session_id" not in st.session_state:
     st.session_state.session_id = str(uuid.uuid4())[:8]
 
@@ -52,15 +48,16 @@ st.markdown("""
 
         #MainMenu, header, footer {visibility: hidden !important;}
 
+        /* --- Kontainer Lebar & Responsif untuk Laptop & HP --- */
         .block-container {
-            width: 90% !important;
-            max-width: 520px !important;
+            width: 92% !important;
+            max-width: 900px !important;
             background: #140024 !important;
             border: 4px solid #00ffcc !important;
-            box-shadow: 8px 8px 0px #ff007f !important;
+            box-shadow: 10px 10px 0px #ff007f !important;
             border-radius: 0px !important;
-            padding: 32px !important;
-            margin: 5vh auto !important;
+            padding: 40px 6% !important;
+            margin: 4vh auto !important;
         }
 
         .y2k-tag {
@@ -78,7 +75,7 @@ st.markdown("""
 
         .main-title {
             font-family: 'VT323', monospace !important;
-            font-size: clamp(38px, 6vw, 48px) !important;
+            font-size: clamp(40px, 5vw, 56px) !important;
             color: #00ffcc !important;
             text-shadow: 3px 3px #ff007f;
             line-height: 1;
@@ -87,24 +84,24 @@ st.markdown("""
         }
 
         .subtitle {
-            font-size: 13px;
+            font-size: clamp(13px, 1.5vw, 15px);
             color: #ff99ff;
-            margin-bottom: 24px;
+            margin-bottom: 28px;
             border-left: 4px solid #00ffcc;
-            padding-left: 10px;
+            padding-left: 12px;
             background: rgba(0, 255, 204, 0.05);
-            padding-top: 4px;
-            padding-bottom: 4px;
+            padding-top: 6px;
+            padding-bottom: 6px;
         }
 
         .tips-box {
             background: rgba(255, 0, 127, 0.1);
             border: 2px dashed #ff007f;
-            padding: 12px;
-            margin-top: 14px;
-            font-size: 12px;
+            padding: 14px;
+            margin-top: 16px;
+            font-size: 13px;
             color: #ffccff;
-            line-height: 1.4;
+            line-height: 1.5;
         }
 
         [data-testid="stFileUploader"] {
@@ -112,7 +109,7 @@ st.markdown("""
             border: 3px dashed #ff007f !important;
             border-radius: 0px !important;
             background-color: #1a002b !important;
-            padding: 10px !important;
+            padding: 12px !important;
         }
         
         [data-testid="stFileUploader"] button {
@@ -146,13 +143,13 @@ st.markdown("""
 
         div.stButton > button, div.stLinkButton > a, div.stDownloadButton > button {
             width: 100% !important;
-            margin-top: 14px !important;
+            margin-top: 16px !important;
             padding: 14px !important;
             border: 3px solid #000000 !important;
             border-radius: 0px !important;
             background: #00ffcc !important;
             color: #000000 !important;
-            font-size: 13px !important;
+            font-size: 14px !important;
             font-weight: 800 !important;
             text-transform: uppercase !important;
             text-align: center !important;
@@ -178,7 +175,7 @@ st.markdown("""
 
 st.markdown("""
     <div>
-        <span class="y2k-tag">💾 SYSTEM_READY // AUTO_CLEAN</span>
+        <span class="y2k-tag">💾 SYSTEM_READY // WIDE_MODE</span>
     </div>
 """, unsafe_allow_html=True)
 
