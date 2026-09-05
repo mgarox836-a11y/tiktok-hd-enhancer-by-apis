@@ -143,7 +143,7 @@ st.markdown("""
 
 st.markdown("""
     <div>
-        <span class="y2k-tag">💾 SYSTEM_READY // Y2K.SYS</span>
+        <span class="y2k-tag">💾 WEB ENHANCE VID TIKTOK BY APIS</span>
     </div>
 """, unsafe_allow_html=True)
 
