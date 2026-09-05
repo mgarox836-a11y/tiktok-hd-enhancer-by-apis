@@ -1,5 +1,4 @@
 import streamlit as st
-import streamlit.components.v1 as components
 import os
 import sys
 
@@ -7,69 +6,37 @@ import sys
 st.set_page_config(
     page_title="TikTok HD Enhancer — Buatan Apis",
     page_icon="✨",
-    layout="wide"
+    layout="centered"
 )
 
-# Sembunyikan Interface Streamlit & Padding Bawaan
+# Injection CSS Kustom (Latar Belakang Animasi, Glassmorphism & Font)
 st.markdown("""
-    <style>
-        #MainMenu, header, footer {visibility: hidden !important;}
-        .stDeployButton {display:none !important;}
-        div[data-testid="stDecoration"] {display:none !important;}
-        .block-container {
-            padding: 0 !important;
-            margin: 0 !important;
-            max-width: 100% !important;
-        }
-        iframe {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw !important;
-            height: 100vh !important;
-            border: none;
-        }
-    </style>
-""", unsafe_allow_html=True)
-
-# Full Custom UI (HTML + CSS + JS) Sesuai Desain Asli Anda
-html_content = """
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
     <style>
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
             user-select: none;
         }
 
-        body {
-            height: 100vh;
-            width: 100vw;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            background: #eef2f7;
-            position: relative;
+        /* Ambient Background & Body Reset */
+        .stApp {
+            background: #eef2f7 !important;
+            overflow-x: hidden;
         }
 
-        /* AMBIENT LIGHTS & ANIMATED ORBS */
+        #MainMenu, header, footer {visibility: hidden !important;}
+        .stDeployButton {display:none !important;}
+        div[data-testid="stDecoration"] {display:none !important;}
+
+        /* Latar Belakang Cahaya Melayang */
         .ambient-background {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 0 !important;
             overflow: hidden;
             pointer-events: none;
         }
@@ -95,21 +62,13 @@ html_content = """
             animation-delay: -4s;
         }
 
-        .light-3 {
-            width: 450px; height: 450px;
-            background: radial-gradient(circle, rgba(147, 51, 234, 0.25) 0%, rgba(255, 255, 255, 0) 70%);
-            top: 40%; left: 50%;
-            transform: translate(-50%, -50%);
-            animation-delay: -8s;
-        }
-
         @keyframes pulseLight {
-            0% { transform: scale(1) translate(0, 0); opacity: 0.5; }
-            50% { transform: scale(1.15) translate(20px, -20px); opacity: 0.75; }
-            100% { transform: scale(0.95) translate(-20px, 20px); opacity: 0.5; }
+            0% { transform: scale(1) translate(0, 0); }
+            50% { transform: scale(1.15) translate(20px, -20px); }
+            100% { transform: scale(0.95) translate(-20px, 20px); }
         }
 
-        /* 3D Glass Orbs Melayang */
+        /* 3D Glass Orbs */
         .orb {
             position: absolute;
             border-radius: 50%;
@@ -119,39 +78,34 @@ html_content = """
             border: 1px solid rgba(255, 255, 255, 0.6);
             box-shadow: inset 8px 8px 20px rgba(255, 255, 255, 0.8), inset -8px -8px 20px rgba(0, 0, 0, 0.05), 0 20px 40px rgba(0, 0, 0, 0.08);
             animation: floatOrb 16s infinite ease-in-out;
+            z-index: 0 !important;
         }
 
-        .orb-1 { width: 140px; height: 140px; top: 15%; left: 12%; animation-delay: 0s; }
-        .orb-2 { width: 200px; height: 200px; bottom: 10%; right: 10%; animation-delay: -5s; }
-        .orb-3 { width: 90px; height: 90px; top: 65%; left: 18%; animation-delay: -10s; }
+        .orb-1 { width: 140px; height: 140px; top: 15%; left: 8%; animation-delay: 0s; }
+        .orb-2 { width: 200px; height: 200px; bottom: 10%; right: 8%; animation-delay: -5s; }
 
         @keyframes floatOrb {
-            0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
-            50% { transform: translateY(-35px) rotate(15deg) scale(1.05); }
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-35px) rotate(15deg); }
         }
 
-        /* GLASS CARD CONTAINERS */
-        .glass-card {
-            width: 90%;
-            max-width: 500px;
-            padding: 42px 40px;
-            background: rgba(255, 255, 255, 0.35);
-            border-radius: 36px;
-            position: relative;
-            z-index: 10;
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border: 1px solid rgba(255, 255, 255, 0.7);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.08), inset 0 0 0 1px rgba(255, 255, 255, 0.5);
-            animation: cardFloat 8s ease-in-out infinite alternate;
+        /* Main Glass Card Container */
+        .block-container {
+            max-width: 500px !important;
+            padding: 42px 40px !important;
+            background: rgba(255, 255, 255, 0.35) !important;
+            border-radius: 36px !important;
+            position: relative !important;
+            z-index: 10 !important;
+            backdrop-filter: blur(30px) !important;
+            -webkit-backdrop-filter: blur(30px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.7) !important;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.08), inset 0 0 0 1px rgba(255, 255, 255, 0.5) !important;
+            margin-top: 3rem !important;
+            margin-bottom: 3rem !important;
         }
 
-        @keyframes cardFloat {
-            0% { transform: translateY(0px); }
-            100% { transform: translateY(-8px); }
-        }
-
-        /* BADGE */
+        /* Badge Built By Apis */
         .badge-wrapper { text-align: center; margin-bottom: 22px; }
         .author-badge {
             display: inline-flex;
@@ -182,14 +136,14 @@ html_content = """
             100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(254, 44, 85, 0); }
         }
 
-        /* TYPOGRAPHY */
+        /* Headings */
         .main-title {
             text-align: center;
-            font-size: 36px;
-            font-weight: 800;
+            font-size: 36px !important;
+            font-weight: 800 !important;
             letter-spacing: -1px;
-            color: #111;
-            margin-bottom: 6px;
+            color: #111 !important;
+            margin-bottom: 6px !important;
             line-height: 1.1;
         }
 
@@ -201,62 +155,48 @@ html_content = """
             font-weight: 500;
         }
 
-        /* DROPZONE GLASS BAR */
-        .drop-zone {
-            border: 2px dashed rgba(0, 0, 0, 0.15);
-            border-radius: 24px;
-            padding: 32px 20px;
-            text-align: center;
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
+        /* Custom Styling Uploader Bawaan agar Bersih */
+        div[data-testid="stFileUploader"] {
+            border: 2px dashed rgba(0, 0, 0, 0.15) !important;
+            border-radius: 24px !important;
+            padding: 16px !important;
+            background: rgba(255, 255, 255, 0.25) !important;
+            backdrop-filter: blur(10px) !important;
+        }
+        div[data-testid="stFileUploader"] section {
+            background: transparent !important;
+        }
+        div[data-testid="stFileUploader"] label {
+            color: rgba(0, 0, 0, 0.7) !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
         }
 
-        .drop-zone:hover {
-            background: rgba(255, 255, 255, 0.5);
-            border-color: rgba(0, 0, 0, 0.3);
-            transform: translateY(-2px);
+        /* Buttons Styling */
+        div.stButton > button, div.stDownloadButton > button {
+            width: 100% !important;
+            margin-top: 18px !important;
+            padding: 16px !important;
+            border: none !important;
+            border-radius: 20px !important;
+            background: #18181b !important;
+            color: #ffffff !important;
+            font-size: 13px !important;
+            font-weight: 700 !important;
+            letter-spacing: 1.2px !important;
+            text-transform: uppercase !important;
+            cursor: pointer !important;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+            transition: all 0.3s ease !important;
         }
 
-        .drop-zone input[type="file"] {
-            position: absolute;
-            width: 100%; height: 100%;
-            top: 0; left: 0;
-            opacity: 0;
-            cursor: pointer;
+        div.stButton > button:hover, div.stDownloadButton > button:hover {
+            background: #000000 !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25) !important;
         }
 
-        .upload-icon { font-size: 24px; margin-bottom: 8px; }
-        .drop-text { font-size: 13px; color: rgba(0, 0, 0, 0.7); font-weight: 600; }
-        .file-name { font-size: 13px; font-weight: 700; color: #fe2c55; margin-top: 6px; word-break: break-all; }
-
-        /* BUTTON GLASS STYLING */
-        .btn-submit {
-            width: 100%;
-            margin-top: 20px;
-            padding: 16px;
-            border: none;
-            border-radius: 20px;
-            background: #18181b;
-            color: #ffffff;
-            font-size: 13px;
-            font-weight: 700;
-            letter-spacing: 1.2px;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .btn-submit:hover {
-            background: #000000;
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
-        }
-
+        /* Card Footer */
         .card-footer {
             display: flex;
             justify-content: space-between;
@@ -271,73 +211,64 @@ html_content = """
             color: rgba(0, 0, 0, 0.4);
         }
     </style>
-</head>
-<body>
 
+    <!-- Layer Background Animasi -->
     <div class="ambient-background">
         <div class="ambient-light light-1"></div>
         <div class="ambient-light light-2"></div>
-        <div class="ambient-light light-3"></div>
         <div class="orb orb-1"></div>
         <div class="orb orb-2"></div>
-        <div class="orb orb-3"></div>
     </div>
+""", unsafe_allow_html=True)
 
-    <main class="glass-card">
-        <div class="badge-wrapper">
-            <div class="author-badge">
-                <span class="dot-pulse"></span> Built by Apis
-            </div>
+# 1. Author Badge
+st.markdown("""
+    <div class="badge-wrapper">
+        <div class="author-badge">
+            <span class="dot-pulse"></span> Built by Apis
         </div>
+    </div>
+""", unsafe_allow_html=True)
 
-        <h1 class="main-title">TikTok Quality</h1>
-        <p class="subtitle">Bypass kompresi TikTok ke 1080p 60FPS tanpa re-encoding</p>
+# 2. Judul & Subtitle
+st.markdown('<div class="main-title">TikTok Quality</div>', unsafe_allow_html=True)
+st.markdown('<div class="subtitle">Bypass kompresi TikTok ke 1080p 60FPS tanpa re-encoding</div>', unsafe_allow_html=True)
 
-        <form id="uploadForm">
-            <div class="drop-zone" id="dropZone">
-                <div class="upload-icon">✦</div>
-                <div class="drop-text" id="dropText">Klik atau seret file <b>.MP4</b> ke sini</div>
-                <div class="file-name" id="fileName"></div>
-                <input type="file" id="videoInput" accept="video/mp4" required>
-            </div>
+# 3. Form File Uploader
+uploaded_file = st.file_uploader("✦ Klik atau seret file .MP4 ke sini", type=["mp4", "mov"])
 
-            <button type="submit" class="btn-submit" id="btnSubmit">Proses Video</button>
-        </form>
+if uploaded_file is not None:
+    if os.path.exists("temp_output.mp4"):
+        os.remove("temp_output.mp4")
 
-        <footer class="card-footer">
-            <span>By Apis</span>
-            <span>•</span>
-            <span>60 FPS Unlock</span>
-        </footer>
-    </main>
+    with open("temp_input.mp4", "wb") as f:
+        f.write(uploaded_file.getbuffer())
 
-    <script>
-        const videoInput = document.getElementById('videoInput');
-        const fileNameDiv = document.getElementById('fileName');
-        const dropText = document.getElementById('dropText');
+    # Tombol Jalankan Pemrosesan Real
+    if st.button("PROSES VIDEO"):
+        with st.spinner("Sedang memproses metadata video..."):
+            # Jalankan skrip tiktok_quality bawaan Python
+            res = os.system(f'"{sys.executable}" -m tiktok_quality temp_input.mp4 temp_output.mp4')
 
-        videoInput.addEventListener('change', () => {
-            if (videoInput.files.length > 0) {
-                fileNameDiv.innerText = videoInput.files[0].name;
-                dropText.style.display = 'none';
-            }
-        });
+        if os.path.exists("temp_output.mp4") and os.path.getsize("temp_output.mp4") > 0:
+            st.success("✨ Selesai! Video HD berhasil diproses.")
+            st.video("temp_output.mp4")
 
-        document.getElementById('uploadForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('btnSubmit');
-            btn.innerText = 'Memproses...';
-            btn.disabled = true;
-            setTimeout(() => {
-                alert('Fitur pemrosesan video berhasil dijalankan!');
-                btn.innerText = 'Proses Video';
-                btn.disabled = false;
-            }, 1500);
-        });
-    </script>
-</body>
-</html>
-"""
+            with open("temp_output.mp4", "rb") as file:
+                st.download_button(
+                    label="UNDUH VIDEO HD",
+                    data=file,
+                    file_name=f"HD_{uploaded_file.name}",
+                    mime="video/mp4"
+                )
+        else:
+            st.error("❌ Terjadi kesalahan saat memproses video. Pastikan format .MP4 valid.")
 
-# Menampilkan Custom Component HTML
-components.html(html_content, height=1000)
+# 4. Footer Card
+st.markdown("""
+    <div class="card-footer">
+        <span>By Apis</span>
+        <span>•</span>
+        <span>60 FPS Unlock</span>
+    </div>
+""", unsafe_allow_html=True)
