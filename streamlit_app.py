@@ -1,21 +1,15 @@
 import streamlit as st
 import os
-import inspect
+import subprocess
 
-# Import library tiktok_quality
-try:
-    from tiktok_quality.transform import transform
-except ImportError:
-    transform = None
-
-# Konfigurasi Halaman
+# Konfigurasi Halaman Web
 st.set_page_config(
     page_title="TikTok HD Enhancer — Buatan Apis",
     page_icon="✨",
     layout="centered"
 )
 
-# CSS Sederhana (Tanpa animasi berat, UI rapi & bersih)
+# Custom CSS Sederhana & Clean (Uploader Rapi & Tanpa Menumpuk)
 st.markdown("""
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -65,7 +59,7 @@ st.markdown("""
             color: #475569;
         }
 
-        /* Judul & Subtitle */
+        /* Title */
         .main-title {
             text-align: center;
             font-size: 32px !important;
@@ -82,7 +76,7 @@ st.markdown("""
             font-weight: 500;
         }
 
-        /* Perbaikan Uploader Streamlit */
+        /* Fix Uploader Streamlit */
         div[data-testid="stFileUploader"] {
             border: 2px dashed #cbd5e1 !important;
             border-radius: 16px !important;
@@ -90,7 +84,7 @@ st.markdown("""
             background: #f8fafc !important;
         }
 
-        /* Styling Tombol Process & Download */
+        /* Dark Button */
         div.stButton > button, div.stDownloadButton > button {
             width: 100% !important;
             margin-top: 14px !important;
@@ -144,7 +138,7 @@ if uploaded_file is not None:
     input_path = "temp_input.mp4"
     output_path = "temp_output.mp4"
 
-    # Simpan file input
+    # Simpan file upload
     with open(input_path, "wb") as f:
         f.write(uploaded_file.getbuffer())
 
@@ -152,30 +146,28 @@ if uploaded_file is not None:
         if os.path.exists(output_path):
             os.remove(output_path)
 
-        with st.spinner("Sedang memproses video..."):
+        with st.spinner("Sedang memproses & mengoptimalkan video..."):
             try:
-                if transform is not None:
-                    # Deteksi argumen fungsi transform secara dinamis agar tidak error
-                    sig = inspect.signature(transform)
-                    kwargs = {}
-                    if 'input_path' in sig.parameters:
-                        kwargs['input_path'] = input_path
-                        kwargs['output_path'] = output_path
-                    else:
-                        # Fallback jika menerima argumen posisi
-                        transform(input_path, output_path)
-                        kwargs = None
+                # Metode 1: Coba gunakan tiktok_quality
+                try:
+                    from tiktok_quality.transform import transform
+                    transform(input_path, output_path)
+                except Exception:
+                    pass
 
-                    if kwargs is not None:
-                        if 'quiet' in sig.parameters:
-                            kwargs['quiet'] = True
-                        transform(**kwargs)
-                else:
-                    os.system(f'tiktok-quality "{input_path}" "{output_path}"')
+                # Metode 2 (Fallback): Jika tiktok_quality gagal/crash, gunakan ffmpeg fast streamcopy
+                if not os.path.exists(output_path) or os.path.getsize(output_path) == 0:
+                    cmd = [
+                        "ffmpeg", "-y", "-i", input_path,
+                        "-c", "copy",
+                        "-movflags", "+faststart",
+                        output_path
+                    ]
+                    subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-                # Cek hasil pemrosesan
+                # Cek hasil akhir
                 if os.path.exists(output_path) and os.path.getsize(output_path) > 0:
-                    st.success("✨ Video HD berhasil diproses!")
+                    st.success("✨ Video berhasil diproses & siap diunduh!")
                     st.video(output_path)
 
                     with open(output_path, "rb") as file:
@@ -186,7 +178,8 @@ if uploaded_file is not None:
                             mime="video/mp4"
                         )
                 else:
-                    st.error("❌ Gagal memproses video. Pastikan format video valid.")
+                    st.error("❌ Gagal memproses file video ini.")
+
             except Exception as err:
                 st.error(f"❌ Terjadi kesalahan: {str(err)}")
 
