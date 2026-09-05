@@ -194,7 +194,7 @@ uploaded_file = st.file_uploader("Seret dan letakkan file video (MP4 / MOV) di s
 
 st.markdown("""
     <div class="tips-box">
-        💡 <b>TIPS SERVER:</b> Gunakan video berdurasi pendek (di bawah 2 menit). Jika ukuran file video Anda terlalu besar/berat, disarankan untuk mengompresnya terlebih dahulu agar pemrosesan berjalan lancar dan cepat!
+        💡 <b>TIPS :</b> Gunakan video berdurasi pendek (di bawah 2 menit). Jika ukuran file video Anda terlalu besar/berat, disarankan untuk mengompresnya terlebih dahulu agar pemrosesan berjalan lancar dan cepat!
     </div>
 """, unsafe_allow_html=True)
 
