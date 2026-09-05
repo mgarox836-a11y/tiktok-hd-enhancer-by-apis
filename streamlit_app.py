@@ -6,14 +6,12 @@ try:
 except ImportError:
     transform = None
 
-# Konfigurasi Halaman Web
 st.set_page_config(
     page_title="TikTok Quality — Neo Brutalism",
     page_icon="⚡",
     layout="centered"
 )
 
-# Custom CSS (Sembunyikan tombol bawaan uploader yang bug dan ganti interaksinya)
 st.markdown("""
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;800&display=swap');
@@ -25,7 +23,6 @@ st.markdown("""
         .stApp { background-color: #f4f0ea !important; }
         #MainMenu, header, footer {visibility: hidden !important;}
 
-        /* Container Kartu Neo-Brutalism */
         .block-container {
             max-width: 480px !important;
             padding: 36px 28px !important;
@@ -34,7 +31,7 @@ st.markdown("""
             border-radius: 16px !important;
             box-shadow: 8px 8px 0px #000000 !important;
             margin-top: 2rem !important;
-            margin-bottom: 2rem !important;
+            margin-bottom: 2.rem !important;
         }
 
         .main-title {
@@ -53,7 +50,7 @@ st.markdown("""
             margin-bottom: 24px;
         }
 
-        /* --- SOLUSI UTAMA: HILANGKAN TOMBOL INTERNAL YANG BUG --- */
+        /* --- KOTAK UPLOADER & UBAH WARNA TOMBOL MENJADI KUNING CERAH --- */
         [data-testid="stFileUploader"] {
             border: 3px dashed #000000 !important;
             border-radius: 12px !important;
@@ -61,12 +58,20 @@ st.markdown("""
             padding: 10px !important;
         }
         
-        /* Menyembunyikan tombol "Browse files" bawaan yang sering bertumpuk teksnya */
         [data-testid="stFileUploader"] button {
             display: none !important;
         }
         
-        [data-testid="stFileUploader"] section div span {
+        /* Mengubah kotak elemen dalam uploader menjadi warna kuning cerah ala Neo-Brutalism */
+        [data-testid="stFileUploaderDropzone"] {
+            background-color: #ffde59 !important;
+            border: 2px solid #000000 !important;
+            border-radius: 8px !important;
+        }
+
+        [data-testid="stFileUploaderDropzone"] span, 
+        [data-testid="stFileUploaderDropzone"] small, 
+        [data-testid="stFileUploaderDropzone"] p {
             color: #000000 !important;
             font-weight: 700 !important;
         }
@@ -99,11 +104,9 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# UI Header
 st.markdown('<div class="main-title">TikTok Quality</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">⚡ BUILT BY APIS • Bypass kompresi ke 1080p 60FPS.</div>', unsafe_allow_html=True)
 
-# Uploader (Area drag & drop tetap berfungsi normal, cukup letakkan file video ke dalam kotak)
 uploaded_file = st.file_uploader("Seret dan letakkan file video (MP4 / MOV) di sini:", type=["mp4", "mov"])
 
 if uploaded_file is not None:
