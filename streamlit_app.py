@@ -31,7 +31,7 @@ st.markdown("""
             border-radius: 16px !important;
             box-shadow: 8px 8px 0px #000000 !important;
             margin-top: 2rem !important;
-            margin-bottom: 2.rem !important;
+            margin-bottom: 2rem !important;
         }
 
         .main-title {
@@ -50,7 +50,7 @@ st.markdown("""
             margin-bottom: 24px;
         }
 
-        /* --- KOTAK UPLOADER & UBAH WARNA TOMBOL MENJADI KUNING CERAH --- */
+        /* --- KOTAK UPLOADER & PAKSA WARNA TEKS MENJADI HITAM --- */
         [data-testid="stFileUploader"] {
             border: 3px dashed #000000 !important;
             border-radius: 12px !important;
@@ -62,18 +62,19 @@ st.markdown("""
             display: none !important;
         }
         
-        /* Mengubah kotak elemen dalam uploader menjadi warna kuning cerah ala Neo-Brutalism */
         [data-testid="stFileUploaderDropzone"] {
             background-color: #ffde59 !important;
             border: 2px solid #000000 !important;
             border-radius: 8px !important;
         }
 
+        /* Target spesifik teks instruksi drag & drop agar hitam pekat dan tebal */
         [data-testid="stFileUploaderDropzone"] span, 
         [data-testid="stFileUploaderDropzone"] small, 
-        [data-testid="stFileUploaderDropzone"] p {
+        [data-testid="stFileUploaderDropzone"] p,
+        [data-testid="stFileUploader"] div {
             color: #000000 !important;
-            font-weight: 700 !important;
+            font-weight: 800 !important;
         }
 
         /* --- TOMBOL UTAMA NEO-BRUTALISM --- */
