@@ -10,7 +10,7 @@ except ImportError:
     transform = None
 
 st.set_page_config(
-    page_title="TikTok Quality — Y2K Retro",
+    page_title="TikTok Enhancer — By Apis",
     page_icon="💾",
     layout="wide"
 )
