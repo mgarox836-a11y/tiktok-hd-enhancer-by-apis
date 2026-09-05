@@ -50,7 +50,7 @@ st.markdown("""
             margin-bottom: 24px;
         }
 
-        /* --- KOTAK UPLOADER & PAKSA WARNA TEKS MENJADI HITAM --- */
+        /* --- KOTAK UPLOADER --- */
         [data-testid="stFileUploader"] {
             border: 3px dashed #000000 !important;
             border-radius: 12px !important;
@@ -68,13 +68,20 @@ st.markdown("""
             border-radius: 8px !important;
         }
 
-        /* Target spesifik teks instruksi drag & drop agar hitam pekat dan tebal */
+        /* Teks instruksi di dalam kotak kuning */
         [data-testid="stFileUploaderDropzone"] span, 
         [data-testid="stFileUploaderDropzone"] small, 
         [data-testid="stFileUploaderDropzone"] p,
         [data-testid="stFileUploader"] div {
             color: #000000 !important;
             font-weight: 800 !important;
+        }
+
+        /* --- UBAH WARNA TEKS NAMA FILE YANG DI-UPLOAD MENJADI PUTIH --- */
+        [data-testid="stUploadedFile"] span, 
+        [data-testid="stUploadedFile"] small,
+        [data-testid="stUploadedFile"] div {
+            color: #ffffff !important;
         }
 
         /* --- TOMBOL UTAMA NEO-BRUTALISM --- */
