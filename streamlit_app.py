@@ -1,5 +1,6 @@
 import streamlit as st
 import os
+import time
 import uuid
 
 try:
@@ -12,6 +13,26 @@ st.set_page_config(
     page_icon="💾",
     layout="centered"
 )
+
+# --- FUNGSI AUTO-CLEAN FILE SAMPAH YANG TERBENGKALAI ---
+def cleanup_old_temp_files(max_age_minutes=15):
+    """Menghapus file temp_* berumur lebih dari max_age_minutes menit untuk menghemat penyimpanan server."""
+    current_time = time.time()
+    max_age_seconds = max_age_minutes * 60
+    
+    try:
+        for filename in os.listdir("."):
+            if filename.startswith("temp_input_") or filename.startswith("temp_output_"):
+                file_path = os.path.join(".", filename)
+                # Cek umur file berdasarkan waktu modifikasi terakhir
+                file_mod_time = os.path.getmtime(file_path)
+                if (current_time - file_mod_time) > max_age_seconds:
+                    os.remove(file_path)
+    except Exception:
+        pass
+
+# Jalankan pembersihan otomatis setiap halaman dimuat
+cleanup_old_temp_files(max_age_minutes=15)
 
 # Buat ID unik untuk setiap sesi browser pengguna agar file tidak saling menimpa
 if "session_id" not in st.session_state:
@@ -76,7 +97,6 @@ st.markdown("""
             padding-bottom: 4px;
         }
 
-        /* Kotak Peringatan / Tips */
         .tips-box {
             background: rgba(255, 0, 127, 0.1);
             border: 2px dashed #ff007f;
@@ -124,7 +144,6 @@ st.markdown("""
             color: #ff99ff !important;
         }
 
-        /* Tombol Aksi Utama & Link Button */
         div.stButton > button, div.stLinkButton > a, div.stDownloadButton > button {
             width: 100% !important;
             margin-top: 14px !important;
@@ -159,36 +178,31 @@ st.markdown("""
 
 st.markdown("""
     <div>
-        <span class="y2k-tag">💾 SYSTEM_READY // OPTIMIZED</span>
+        <span class="y2k-tag">💾 SYSTEM_READY // AUTO_CLEAN</span>
     </div>
 """, unsafe_allow_html=True)
 
 st.markdown('<div class="main-title">TikTok Quality</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">Bypass kompresi otomatis ke resolusi 1080p 60FPS tanpa re-encoding.</div>', unsafe_allow_html=True)
 
-# Batasan ukuran file maksimal (150 MB)
 MAX_FILE_SIZE_MB = 150
 
 uploaded_file = st.file_uploader("Seret dan letakkan file video (MP4 / MOV) di sini", type=["mp4", "mov"])
 
-# Kotak Tips & Peringatan di bawah uploader
 st.markdown("""
     <div class="tips-box">
         💡 <b>TIPS SERVER:</b> Gunakan video berdurasi pendek (di bawah 2 menit). Jika ukuran file video Anda terlalu besar/berat, disarankan untuk mengompresnya terlebih dahulu agar pemrosesan berjalan lancar dan cepat!
     </div>
 """, unsafe_allow_html=True)
 
-# Tombol link langsung ke videocompress.ai/id
 st.link_button("🌐 COMPRESS VIDEO DI SINI (RECOMMENDED)", "https://videocompress.ai/id")
 
 if uploaded_file is not None:
-    # Validasi ukuran file
     file_size_mb = uploaded_file.size / (1024 * 1024)
     
     if file_size_mb > MAX_FILE_SIZE_MB:
         st.error(f"❌ Ukuran file terlalu besar ({file_size_mb:.1f}MB). Batas maksimal adalah {MAX_FILE_SIZE_MB}MB.")
     else:
-        # Nama file dibuat unik berdasarkan session ID pengguna
         sid = st.session_state.session_id
         input_path = f"temp_input_{sid}.mp4"
         output_path = f"temp_output_{sid}.mp4"
@@ -221,7 +235,6 @@ if uploaded_file is not None:
                             mime="video/mp4"
                         )
                     
-                    # Bersihkan file input sementara milik user ini
                     if os.path.exists(input_path):
                         os.remove(input_path)
                 else:
