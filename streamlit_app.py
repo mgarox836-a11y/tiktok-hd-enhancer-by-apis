@@ -23,19 +23,21 @@ st.markdown("""
         .stApp { background-color: #f4f0ea !important; }
         #MainMenu, header, footer {visibility: hidden !important;}
 
+        /* --- TAMPILAN ELASTIS & RESPONSIF UNTUK SEMUA RASIO LAYAR --- */
         .block-container {
-            max-width: 480px !important;
-            padding: 36px 28px !important;
+            width: 90% !important;
+            max-width: 550px !important;
+            min-width: 300px !important;
+            padding: 4vw 4vw !important;
             background: #ffffff !important;
             border: 4px solid #000000 !important;
             border-radius: 16px !important;
             box-shadow: 8px 8px 0px #000000 !important;
-            margin-top: 2rem !important;
-            margin-bottom: 2rem !important;
+            margin: 5vh auto !important;
         }
 
         .main-title {
-            font-size: 36px !important;
+            font-size: clamp(24px, 5vw, 36px) !important;
             font-weight: 800 !important;
             color: #000000 !important;
             line-height: 1.1;
@@ -44,14 +46,15 @@ st.markdown("""
         }
 
         .subtitle {
-            font-size: 14px;
+            font-size: clamp(12px, 2vw, 14px);
             font-weight: 700;
             color: #444444;
             margin-bottom: 24px;
         }
 
-        /* --- KOTAK UPLOADER --- */
+        /* --- KOTAK UPLOADER ELASTIS --- */
         [data-testid="stFileUploader"] {
+            width: 100% !important;
             border: 3px dashed #000000 !important;
             border-radius: 12px !important;
             background-color: #fffaf0 !important;
@@ -68,7 +71,7 @@ st.markdown("""
             border-radius: 8px !important;
         }
 
-        /* Teks instruksi di dalam kotak kuning */
+        /* Teks instruksi drag & drop */
         [data-testid="stFileUploaderDropzone"] span, 
         [data-testid="stFileUploaderDropzone"] small, 
         [data-testid="stFileUploaderDropzone"] p,
@@ -77,13 +80,15 @@ st.markdown("""
             font-weight: 800 !important;
         }
 
-        /* --- PAKSA NAMA FILE & UKURANNYA MENJADI PUTIH --- */
-        [data-testid="stUploadedFile"] span {
+        /* --- PAKSA WARNA NAMA FILE YANG DI-UPLOAD MENJADI PUTIH --- */
+        [data-testid="stUploadedFile"] span,
+        [data-testid="stUploadedFile"] div,
+        [data-testid="stUploadedFile"] p {
             color: #ffffff !important;
         }
         
         [data-testid="stUploadedFile"] small {
-            color: #e0e0e0 !important;
+            color: #f0f0f0 !important;
         }
 
         /* --- TOMBOL UTAMA NEO-BRUTALISM --- */
