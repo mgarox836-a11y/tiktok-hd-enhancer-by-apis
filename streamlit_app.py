@@ -7,58 +7,79 @@ except ImportError:
     transform = None
 
 st.set_page_config(
-    page_title="TikTok Quality — Neo Brutalism",
+    page_title="TikTok Quality — Bento UI",
     page_icon="⚡",
     layout="centered"
 )
 
 st.markdown("""
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
 
         html, body, [class*="css"], p, span, button, label {
-            font-family: 'Space Grotesk', sans-serif !important;
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
         }
 
-        .stApp { background-color: #f4f0ea !important; }
+        .stApp { background-color: #f8fafc !important; }
         #MainMenu, header, footer {visibility: hidden !important;}
 
-        /* --- TAMPILAN ELASTIS & RESPONSIF UNTUK SEMUA RASIO LAYAR --- */
+        /* --- BENTO GRID CONTAINER (ELASTIS & RESPONSIF) --- */
         .block-container {
             width: 90% !important;
-            max-width: 550px !important;
-            min-width: 300px !important;
-            padding: 4vw 4vw !important;
+            max-width: 600px !important;
+            min-width: 320px !important;
+            padding: 40px !important;
             background: #ffffff !important;
-            border: 4px solid #000000 !important;
-            border-radius: 16px !important;
-            box-shadow: 8px 8px 0px #000000 !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 24px !important;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
             margin: 5vh auto !important;
         }
 
-        .main-title {
-            font-size: clamp(24px, 5vw, 36px) !important;
-            font-weight: 800 !important;
-            color: #000000 !important;
-            line-height: 1.1;
-            margin-bottom: 8px !important;
+        /* Bento Badge */
+        .bento-badge {
+            display: inline-flex;
+            align-items: center;
+            background: #eff6ff;
+            color: #2563eb;
+            font-weight: 700;
+            font-size: 11px;
+            padding: 6px 12px;
+            border-radius: 9999px;
+            margin-bottom: 14px;
+            letter-spacing: -0.01em;
             text-transform: uppercase;
         }
 
-        .subtitle {
-            font-size: clamp(12px, 2vw, 14px);
-            font-weight: 700;
-            color: #444444;
-            margin-bottom: 24px;
+        .main-title {
+            font-size: clamp(26px, 4vw, 34px) !important;
+            font-weight: 800 !important;
+            color: #0f172a !important;
+            letter-spacing: -0.03em;
+            line-height: 1.15;
+            margin-bottom: 8px !important;
         }
 
-        /* --- KOTAK UPLOADER ELASTIS --- */
+        .subtitle {
+            font-size: clamp(13px, 1.5vw, 15px);
+            font-weight: 500;
+            color: #64748b;
+            margin-bottom: 28px;
+            letter-spacing: -0.01em;
+        }
+
+        /* --- BENTO UPLOADER CARD --- */
         [data-testid="stFileUploader"] {
             width: 100% !important;
-            border: 3px dashed #000000 !important;
-            border-radius: 12px !important;
-            background-color: #fffaf0 !important;
-            padding: 10px !important;
+            border: 2px dashed #cbd5e1 !important;
+            border-radius: 16px !important;
+            background-color: #f8fafc !important;
+            padding: 12px !important;
+            transition: all 0.2s ease;
+        }
+
+        [data-testid="stFileUploader"]:hover {
+            border-color: #2563eb !important;
         }
         
         [data-testid="stFileUploader"] button {
@@ -66,63 +87,73 @@ st.markdown("""
         }
         
         [data-testid="stFileUploaderDropzone"] {
-            background-color: #ffde59 !important;
-            border: 2px solid #000000 !important;
-            border-radius: 8px !important;
+            background-color: #ffffff !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 12px !important;
+            padding: 12px !important;
         }
 
-        /* Teks instruksi drag & drop */
+        /* Teks Instruksi Drag & Drop */
         [data-testid="stFileUploaderDropzone"] span, 
         [data-testid="stFileUploaderDropzone"] small, 
         [data-testid="stFileUploaderDropzone"] p,
         [data-testid="stFileUploader"] div {
-            color: #000000 !important;
-            font-weight: 800 !important;
+            color: #475569 !important;
+            font-weight: 600 !important;
         }
 
-        /* --- PAKSA WARNA NAMA FILE YANG DI-UPLOAD MENJADI PUTIH --- */
+        /* Nama File yang Di-upload */
         [data-testid="stUploadedFile"] span,
         [data-testid="stUploadedFile"] div,
         [data-testid="stUploadedFile"] p {
-            color: #ffffff !important;
+            color: #0f172a !important;
+            font-weight: 600 !important;
         }
         
         [data-testid="stUploadedFile"] small {
-            color: #f0f0f0 !important;
+            color: #64748b !important;
         }
 
-        /* --- TOMBOL UTAMA NEO-BRUTALISM --- */
+        /* --- BENTO BUTTONS (PRIMARY ACCENT) --- */
         div.stButton > button, div.stDownloadButton > button {
             width: 100% !important;
-            margin-top: 16px !important;
-            padding: 14px !important;
-            border: 3px solid #000000 !important;
-            border-radius: 12px !important;
-            background: #ffde59 !important;
-            color: #000000 !important;
+            margin-top: 18px !important;
+            padding: 14px 20px !important;
+            border: none !important;
+            border-radius: 14px !important;
+            background: #2563eb !important;
+            color: #ffffff !important;
             font-size: 14px !important;
-            font-weight: 800 !important;
-            text-transform: uppercase !important;
-            box-shadow: 4px 4px 0px #000000 !important;
-            transition: all 0.1s ease !important;
+            font-weight: 700 !important;
+            letter-spacing: -0.01em !important;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25) !important;
+            transition: all 0.2s ease !important;
         }
 
         div.stButton > button:hover, div.stDownloadButton > button:hover {
-            transform: translate(-2px, -2px) !important;
-            box-shadow: 6px 6px 0px #000000 !important;
+            background: #1d4ed8 !important;
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35) !important;
+            transform: translateY(-1px);
         }
         
         div.stButton > button:active, div.stDownloadButton > button:active {
-            transform: translate(2px, 2px) !important;
-            box-shadow: 2px 2px 0px #000000 !important;
+            transform: translateY(0px);
         }
     </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="main-title">TikTok Quality</div>', unsafe_allow_html=True)
-st.markdown('<div class="subtitle">⚡ BUILT BY APIS • Bypass kompresi ke 1080p 60FPS.</div>', unsafe_allow_html=True)
+# Bento UI Header Section
+st.markdown("""
+    <div>
+        <span class="bento-badge">⚡ Bento Engine</span>
+    </div>
+""", unsafe_allow_html=True)
 
-uploaded_file = st.file_uploader("Seret dan letakkan file video (MP4 / MOV) di sini:", type=["mp4", "mov"])
+st.markdown('<div class="main-title">TikTok Quality</div>', unsafe_allow_html=True)
+st.markdown('<div class="subtitle">Bypass kompresi otomatis ke resolusi 1080p 60FPS tanpa re-encoding.</div>', unsafe_allow_html=True)
+
+# File Uploader
+uploaded_file = st.file_uploader("Seret dan letakkan file video (MP4 / MOV) di sini", type=["mp4", "mov"])
 
 if uploaded_file is not None:
     input_path = "temp_input.mp4"
@@ -131,7 +162,7 @@ if uploaded_file is not None:
     with open(input_path, "wb") as f:
         f.write(uploaded_file.getbuffer())
 
-    if st.button("PROSES VIDEO"):
+    if st.button("PROSES VIDEO SEKARANG"):
         if os.path.exists(output_path):
             os.remove(output_path)
 
@@ -146,7 +177,7 @@ if uploaded_file is not None:
                     st.warning(f"Error: {str(e)}")
 
             if success:
-                st.success("✨ Selesai diproses!")
+                st.success("✨ Video berhasil dioptimasi!")
                 st.video(output_path)
                 with open(output_path, "rb") as file:
                     st.download_button(
