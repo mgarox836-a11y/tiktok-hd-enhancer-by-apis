@@ -13,21 +13,19 @@ st.set_page_config(
     layout="centered"
 )
 
-# Custom CSS Neo-Brutalism (Fix Total Overlap & Dark Mode Clash)
+# Custom CSS (Sembunyikan tombol bawaan uploader yang bug dan ganti interaksinya)
 st.markdown("""
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;800&display=swap');
 
-        /* Gunakan class spesifik, BUKAN wildcard (*) agar komponen internal Streamlit tidak rusak */
-        html, body, [class*="css"], [class*="st-"], p, span, button, label {
+        html, body, [class*="css"], p, span, button, label {
             font-family: 'Space Grotesk', sans-serif !important;
         }
 
-        /* Latar Belakang & Hide Elemen Bawaan */
         .stApp { background-color: #f4f0ea !important; }
         #MainMenu, header, footer {visibility: hidden !important;}
 
-        /* Container Kartu Utama Neo-Brutalism */
+        /* Container Kartu Neo-Brutalism */
         .block-container {
             max-width: 480px !important;
             padding: 36px 28px !important;
@@ -55,35 +53,22 @@ st.markdown("""
             margin-bottom: 24px;
         }
 
-        /* --- FIX AREA UPLOADER (ANTI-OVERLAP & PAKSA LIGHT MODE) --- */
-        /* Hapus warna gelap bawaan sistem di area uploader */
-        [data-testid="stFileUploader"] section {
-            background-color: transparent !important;
-        }
-        
-        /* Desain area dropzone */
-        [data-testid="stFileUploaderDropzone"] {
-            background-color: #ffffff !important;
+        /* --- SOLUSI UTAMA: HILANGKAN TOMBOL INTERNAL YANG BUG --- */
+        [data-testid="stFileUploader"] {
             border: 3px dashed #000000 !important;
             border-radius: 12px !important;
-            padding: 16px !important;
+            background-color: #fffaf0 !important;
+            padding: 10px !important;
         }
         
-        /* Paksa semua teks di dalam uploader menjadi hitam (menimpa dark mode sistem) */
-        [data-testid="stFileUploaderDropzone"] *, [data-testid="stFileUploader"] label p {
-            color: #000000 !important;
-        }
-
-        [data-testid="stFileUploader"] label p {
-            font-weight: 800 !important;
-            font-size: 14px !important;
-            text-transform: uppercase;
-        }
-
-        /* --- FIX TEKS BERTUMPUK (SEMBUNYIKAN TEKS SCREEN READER) --- */
-        .st-visually-hidden {
+        /* Menyembunyikan tombol "Browse files" bawaan yang sering bertumpuk teksnya */
+        [data-testid="stFileUploader"] button {
             display: none !important;
-            opacity: 0 !important;
+        }
+        
+        [data-testid="stFileUploader"] section div span {
+            color: #000000 !important;
+            font-weight: 700 !important;
         }
 
         /* --- TOMBOL UTAMA NEO-BRUTALISM --- */
@@ -118,8 +103,8 @@ st.markdown("""
 st.markdown('<div class="main-title">TikTok Quality</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">⚡ BUILT BY APIS • Bypass kompresi ke 1080p 60FPS.</div>', unsafe_allow_html=True)
 
-# Uploader
-uploaded_file = st.file_uploader("Upload video (MP4 / MOV):", type=["mp4", "mov"])
+# Uploader (Area drag & drop tetap berfungsi normal, cukup letakkan file video ke dalam kotak)
+uploaded_file = st.file_uploader("Seret dan letakkan file video (MP4 / MOV) di sini:", type=["mp4", "mov"])
 
 if uploaded_file is not None:
     input_path = "temp_input.mp4"
