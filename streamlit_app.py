@@ -7,79 +7,78 @@ except ImportError:
     transform = None
 
 st.set_page_config(
-    page_title="TikTok Quality — Bento UI",
-    page_icon="⚡",
+    page_title="TikTok Quality — Y2K Retro",
+    page_icon="💾",
     layout="centered"
 )
 
 st.markdown("""
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=VT323&display=swap');
 
         html, body, [class*="css"], p, span, button, label {
-            font-family: 'Plus Jakarta Sans', sans-serif !important;
+            font-family: 'Space Mono', monospace !important;
         }
 
-        .stApp { background-color: #f8fafc !important; }
+        .stApp { 
+            background: radial-gradient(circle, #2a0845 0%, #11001f 100%) !important; 
+        }
+
         #MainMenu, header, footer {visibility: hidden !important;}
 
-        /* --- BENTO GRID CONTAINER (ELASTIS & RESPONSIF) --- */
+        /* --- Y2K RETRO CONTAINER (CHUNKY BORDERS & NEON SHADOWS) --- */
         .block-container {
             width: 90% !important;
-            max-width: 600px !important;
-            min-width: 320px !important;
-            padding: 40px !important;
-            background: #ffffff !important;
-            border: 1px solid #e2e8f0 !important;
-            border-radius: 24px !important;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
+            max-width: 520px !important;
+            background: #140024 !important;
+            border: 4px solid #00ffcc !important;
+            box-shadow: 8px 8px 0px #ff007f !important;
+            border-radius: 0px !important;
+            padding: 32px !important;
             margin: 5vh auto !important;
         }
 
-        /* Bento Badge */
-        .bento-badge {
-            display: inline-flex;
-            align-items: center;
-            background: #eff6ff;
-            color: #2563eb;
-            font-weight: 700;
-            font-size: 11px;
-            padding: 6px 12px;
-            border-radius: 9999px;
+        .y2k-tag {
+            display: inline-block;
+            background: #ff007f;
+            color: #ffffff;
+            font-family: 'VT323', monospace !important;
+            font-size: 18px;
+            padding: 2px 10px;
+            border: 2px solid #00ffcc;
             margin-bottom: 14px;
-            letter-spacing: -0.01em;
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .main-title {
-            font-size: clamp(26px, 4vw, 34px) !important;
-            font-weight: 800 !important;
-            color: #0f172a !important;
-            letter-spacing: -0.03em;
-            line-height: 1.15;
+            font-family: 'VT323', monospace !important;
+            font-size: clamp(38px, 6vw, 48px) !important;
+            color: #00ffcc !important;
+            text-shadow: 3px 3px #ff007f;
+            line-height: 1;
             margin-bottom: 8px !important;
+            text-transform: uppercase;
         }
 
         .subtitle {
-            font-size: clamp(13px, 1.5vw, 15px);
-            font-weight: 500;
-            color: #64748b;
-            margin-bottom: 28px;
-            letter-spacing: -0.01em;
+            font-size: 13px;
+            color: #ff99ff;
+            margin-bottom: 24px;
+            border-left: 4px solid #00ffcc;
+            padding-left: 10px;
+            background: rgba(0, 255, 204, 0.05);
+            padding-top: 4px;
+            padding-bottom: 4px;
         }
 
-        /* --- BENTO UPLOADER CARD --- */
+        /* --- Y2K UPLOADER BOX --- */
         [data-testid="stFileUploader"] {
             width: 100% !important;
-            border: 2px dashed #cbd5e1 !important;
-            border-radius: 16px !important;
-            background-color: #f8fafc !important;
-            padding: 12px !important;
-            transition: all 0.2s ease;
-        }
-
-        [data-testid="stFileUploader"]:hover {
-            border-color: #2563eb !important;
+            border: 3px dashed #ff007f !important;
+            border-radius: 0px !important;
+            background-color: #1a002b !important;
+            padding: 10px !important;
         }
         
         [data-testid="stFileUploader"] button {
@@ -87,72 +86,70 @@ st.markdown("""
         }
         
         [data-testid="stFileUploaderDropzone"] {
-            background-color: #ffffff !important;
-            border: 1px solid #e2e8f0 !important;
-            border-radius: 12px !important;
-            padding: 12px !important;
+            background-color: #0d0017 !important;
+            border: 2px solid #00ffcc !important;
+            border-radius: 0px !important;
         }
 
-        /* Teks Instruksi Drag & Drop */
         [data-testid="stFileUploaderDropzone"] span, 
         [data-testid="stFileUploaderDropzone"] small, 
         [data-testid="stFileUploaderDropzone"] p,
         [data-testid="stFileUploader"] div {
-            color: #475569 !important;
-            font-weight: 600 !important;
+            color: #00ffcc !important;
+            font-weight: 700 !important;
         }
 
-        /* Nama File yang Di-upload */
+        /* Nama file yang di-upload */
         [data-testid="stUploadedFile"] span,
         [data-testid="stUploadedFile"] div,
         [data-testid="stUploadedFile"] p {
-            color: #0f172a !important;
-            font-weight: 600 !important;
+            color: #ffffff !important;
+            font-weight: 700 !important;
         }
         
         [data-testid="stUploadedFile"] small {
-            color: #64748b !important;
+            color: #ff99ff !important;
         }
 
-        /* --- BENTO BUTTONS (PRIMARY ACCENT) --- */
+        /* --- Y2K RETRO BUTTONS --- */
         div.stButton > button, div.stDownloadButton > button {
             width: 100% !important;
-            margin-top: 18px !important;
-            padding: 14px 20px !important;
-            border: none !important;
-            border-radius: 14px !important;
-            background: #2563eb !important;
-            color: #ffffff !important;
+            margin-top: 16px !important;
+            padding: 14px !important;
+            border: 3px solid #000000 !important;
+            border-radius: 0px !important;
+            background: #00ffcc !important;
+            color: #000000 !important;
             font-size: 14px !important;
-            font-weight: 700 !important;
-            letter-spacing: -0.01em !important;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25) !important;
-            transition: all 0.2s ease !important;
+            font-weight: 800 !important;
+            text-transform: uppercase !important;
+            box-shadow: 4px 4px 0px #ff007f !important;
+            transition: none !important;
         }
 
         div.stButton > button:hover, div.stDownloadButton > button:hover {
-            background: #1d4ed8 !important;
-            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35) !important;
-            transform: translateY(-1px);
+            background: #ff007f !important;
+            color: #ffffff !important;
+            box-shadow: 4px 4px 0px #00ffcc !important;
+            transform: translate(-2px, -2px);
         }
         
         div.stButton > button:active, div.stDownloadButton > button:active {
-            transform: translateY(0px);
+            transform: translate(2px, 2px) !important;
+            box-shadow: 2px 2px 0px #ff007f !important;
         }
     </style>
 """, unsafe_allow_html=True)
 
-# Bento UI Header Section
 st.markdown("""
     <div>
-        <span class="bento-badge">⚡ Bento Engine</span>
+        <span class="y2k-tag">💾 SYSTEM_READY // Y2K.SYS</span>
     </div>
 """, unsafe_allow_html=True)
 
 st.markdown('<div class="main-title">TikTok Quality</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">Bypass kompresi otomatis ke resolusi 1080p 60FPS tanpa re-encoding.</div>', unsafe_allow_html=True)
 
-# File Uploader
 uploaded_file = st.file_uploader("Seret dan letakkan file video (MP4 / MOV) di sini", type=["mp4", "mov"])
 
 if uploaded_file is not None:
