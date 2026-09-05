@@ -1,5 +1,6 @@
 import streamlit as st
 import os
+import uuid
 
 try:
     from tiktok_quality.transform import transform
@@ -11,6 +12,10 @@ st.set_page_config(
     page_icon="💾",
     layout="centered"
 )
+
+# Buat ID unik untuk setiap sesi browser pengguna agar file tidak saling menimpa
+if "session_id" not in st.session_state:
+    st.session_state.session_id = str(uuid.uuid4())[:8]
 
 st.markdown("""
     <style>
@@ -26,7 +31,6 @@ st.markdown("""
 
         #MainMenu, header, footer {visibility: hidden !important;}
 
-        /* --- Y2K RETRO CONTAINER (CHUNKY BORDERS & NEON SHADOWS) --- */
         .block-container {
             width: 90% !important;
             max-width: 520px !important;
@@ -72,7 +76,6 @@ st.markdown("""
             padding-bottom: 4px;
         }
 
-        /* --- Y2K UPLOADER BOX --- */
         [data-testid="stFileUploader"] {
             width: 100% !important;
             border: 3px dashed #ff007f !important;
@@ -99,7 +102,6 @@ st.markdown("""
             font-weight: 700 !important;
         }
 
-        /* Nama file yang di-upload */
         [data-testid="stUploadedFile"] span,
         [data-testid="stUploadedFile"] div,
         [data-testid="stUploadedFile"] p {
@@ -111,7 +113,6 @@ st.markdown("""
             color: #ff99ff !important;
         }
 
-        /* --- Y2K RETRO BUTTONS --- */
         div.stButton > button, div.stDownloadButton > button {
             width: 100% !important;
             margin-top: 16px !important;
@@ -143,45 +144,60 @@ st.markdown("""
 
 st.markdown("""
     <div>
-        <span class="y2k-tag">💾 WEB ENHANCE VID TIKTOK BY APIS</span>
+        <span class="y2k-tag">💾 SYSTEM_READY // SECURE_MODE</span>
     </div>
 """, unsafe_allow_html=True)
 
 st.markdown('<div class="main-title">TikTok Quality</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">Bypass kompresi otomatis ke resolusi 1080p 60FPS tanpa re-encoding.</div>', unsafe_allow_html=True)
 
+# Batasan ukuran file maksimal (Contoh: 150 MB)
+MAX_FILE_SIZE_MB = 150
+
 uploaded_file = st.file_uploader("Seret dan letakkan file video (MP4 / MOV) di sini", type=["mp4", "mov"])
 
 if uploaded_file is not None:
-    input_path = "temp_input.mp4"
-    output_path = "temp_output.mp4"
+    # Validasi ukuran file
+    file_size_mb = uploaded_file.size / (1024 * 1024)
+    
+    if file_size_mb > MAX_FILE_SIZE_MB:
+        st.error(f"❌ Ukuran file terlalu besar ({file_size_mb:.1f}MB). Batas maksimal adalah {MAX_FILE_SIZE_MB}MB.")
+    else:
+        # Nama file dibuat unik berdasarkan session ID pengguna
+        sid = st.session_state.session_id
+        input_path = f"temp_input_{sid}.mp4"
+        output_path = f"temp_output_{sid}.mp4"
 
-    with open(input_path, "wb") as f:
-        f.write(uploaded_file.getbuffer())
+        with open(input_path, "wb") as f:
+            f.write(uploaded_file.getbuffer())
 
-    if st.button("PROSES VIDEO SEKARANG"):
-        if os.path.exists(output_path):
-            os.remove(output_path)
+        if st.button("PROSES VIDEO SEKARANG"):
+            if os.path.exists(output_path):
+                os.remove(output_path)
 
-        with st.spinner("Memproses video..."):
-            success = False
-            if transform is not None:
-                try:
-                    transform(input_path, output_path)
-                    if os.path.exists(output_path) and os.path.getsize(output_path) > 0:
-                        success = True
-                except Exception as e:
-                    st.warning(f"Error: {str(e)}")
+            with st.spinner("Memproses video..."):
+                success = False
+                if transform is not None:
+                    try:
+                        transform(input_path, output_path)
+                        if os.path.exists(output_path) and os.path.getsize(output_path) > 0:
+                            success = True
+                    except Exception as e:
+                        st.warning(f"Error: {str(e)}")
 
-            if success:
-                st.success("✨ Video berhasil dioptimasi!")
-                st.video(output_path)
-                with open(output_path, "rb") as file:
-                    st.download_button(
-                        label="UNDUH VIDEO HD",
-                        data=file,
-                        file_name=f"HD_{uploaded_file.name}",
-                        mime="video/mp4"
-                    )
-            else:
-                st.error("❌ Gagal memproses video.")
+                if success:
+                    st.success("✨ Video berhasil dioptimasi!")
+                    st.video(output_path)
+                    with open(output_path, "rb") as file:
+                        st.download_button(
+                            label="UNDUH VIDEO HD",
+                            data=file,
+                            file_name=f"HD_{uploaded_file.name}",
+                            mime="video/mp4"
+                        )
+                    
+                    # Bersihkan file input sementara milik user ini
+                    if os.path.exists(input_path):
+                        os.remove(input_path)
+                else:
+                    st.error("❌ Gagal memproses video.")
