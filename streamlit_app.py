@@ -77,11 +77,13 @@ st.markdown("""
             font-weight: 800 !important;
         }
 
-        /* --- UBAH WARNA TEKS NAMA FILE YANG DI-UPLOAD MENJADI PUTIH --- */
-        [data-testid="stUploadedFile"] span, 
-        [data-testid="stUploadedFile"] small,
-        [data-testid="stUploadedFile"] div {
+        /* --- PAKSA NAMA FILE & UKURANNYA MENJADI PUTIH --- */
+        [data-testid="stUploadedFile"] span {
             color: #ffffff !important;
+        }
+        
+        [data-testid="stUploadedFile"] small {
+            color: #e0e0e0 !important;
         }
 
         /* --- TOMBOL UTAMA NEO-BRUTALISM --- */
