@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok HD Enhancer — Buatan Apis</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', 'Google Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            user-select: none;
+        }
+
+        body {
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background: #eef2f7;
+            position: relative;
+        }
+
+        /* --- BACKGROUND ANIMATED SHAPES & AMBIENT --- */
+        .ambient-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .ambient-light {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.6;
+            animation: pulseLight 12s infinite alternate ease-in-out;
+        }
+
+        .light-1 {
+            width: 550px;
+            height: 550px;
+            background: radial-gradient(circle, rgba(254, 44, 85, 0.35) 0%, rgba(255, 255, 255, 0) 70%);
+            top: -100px;
+            right: -80px;
+            animation-delay: 0s;
+        }
+
+        .light-2 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(37, 244, 238, 0.3) 0%, rgba(255, 255, 255, 0) 70%);
+            bottom: -150px;
+            left: -120px;
+            animation-delay: -4s;
+        }
+
+        .light-3 {
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(147, 51, 234, 0.25) 0%, rgba(255, 255, 255, 0) 70%);
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -8s;
+        }
+
+        @keyframes pulseLight {
+            0% { transform: scale(1) translate(0, 0); opacity: 0.5; }
+            50% { transform: scale(1.15) translate(20px, -20px); opacity: 0.75; }
+            100% { transform: scale(0.95) translate(-20px, 20px); opacity: 0.5; }
+        }
+
+        /* 3D Glass Orbs (Bulatan 3D Melayang) */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 
+                inset 8px 8px 20px rgba(255, 255, 255, 0.8),
+                inset -8px -8px 20px rgba(0, 0, 0, 0.05),
+                0 20px 40px rgba(0, 0, 0, 0.08);
+            animation: floatOrb 16s infinite ease-in-out;
+        }
+
+        .orb-1 { width: 140px; height: 140px; top: 15%; left: 12%; animation-delay: 0s; }
+        .orb-2 { width: 200px; height: 200px; bottom: 10%; right: 10%; animation-delay: -5s; }
+        .orb-3 { width: 90px; height: 90px; top: 65%; left: 18%; animation-delay: -10s; }
+
+        @keyframes floatOrb {
+            0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+            50% { transform: translateY(-35px) rotate(15deg) scale(1.05); }
+        }
+
+        /* --- MAIN GLASS CARD --- */
+        .glass-card {
+            width: 90%;
+            max-width: 520px;
+            padding: 42px 40px;
+            background: rgba(255, 255, 255, 0.35);
+            border-radius: 36px;
+            position: relative;
+            z-index: 10;
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.08),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+            animation: cardFloat 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes cardFloat {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-8px); }
+        }
+
+        /* --- AUTHOR BADGE --- */
+        .badge-wrapper {
+            text-align: center;
+            margin-bottom: 22px;
+        }
+
+        .author-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: #222;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            transition: all 0.3s ease;
+        }
+
+        .author-badge:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .dot-pulse {
+            width: 7px;
+            height: 7px;
+            background-color: #fe2c55;
+            border-radius: 50%;
+            box-shadow: 0 0 0 0 rgba(254, 44, 85, 0.7);
+            animation: pulseDot 1.8s infinite;
+        }
+
+        @keyframes pulseDot {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(254, 44, 85, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(254, 44, 85, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(254, 44, 85, 0); }
+        }
+
+        /* --- TITLE & SUBTITLE --- */
+        .main-title {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            color: #111;
+            margin-bottom: 6px;
+            line-height: 1.1;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 13px;
+            color: rgba(0, 0, 0, 0.55);
+            letter-spacing: 0.1px;
+            margin-bottom: 30px;
+            font-weight: 400;
+        }
+
+        /* --- DROPZONE GLASS BAR --- */
+        .drop-zone {
+            border: 2px dashed rgba(0, 0, 0, 0.12);
+            border-radius: 24px;
+            padding: 32px 20px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .drop-zone:hover, .drop-zone.dragover {
+            background: rgba(255, 255, 255, 0.55);
+            border-color: rgba(0, 0, 0, 0.35);
+            transform: translateY(-3px) scale(1.01);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        .drop-zone input[type="file"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .upload-icon {
+            font-size: 26px;
+            margin-bottom: 8px;
+            display: inline-block;
+            transition: transform 0.4s ease;
+            color: #222;
+        }
+
+        .drop-zone:hover .upload-icon {
+            transform: scale(1.2) rotate(15deg);
+        }
+
+        .drop-text {
+            font-size: 13px;
+            color: rgba(0, 0, 0, 0.7);
+        }
+
+        .file-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #000;
+            margin-top: 6px;
+            word-break: break-all;
+        }
+
+        /* --- ANIMATED GLASS BUTTON --- */
+        .btn-submit {
+            width: 100%;
+            margin-top: 22px;
+            padding: 16px;
+            border: none;
+            border-radius: 20px;
+            background: #18181b;
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Effet Glow & Shine pada tombol saat Hover */
+        .btn-submit::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+            transition: 0.6s;
+        }
+
+        .btn-submit:hover::before {
+            left: 100%;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-4px) scale(1.02);
+            background: #000000;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Effet Tekan saat Klik */
+        .btn-submit:active {
+            transform: translateY(1px) scale(0.98);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-submit:disabled {
+            background: rgba(0, 0, 0, 0.25);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Spinner Loading */
+        .spinner {
+            display: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top: 2px solid #fff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* --- STATUS & PROGRESS BAR --- */
+        .status-container {
+            margin-top: 18px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(0, 0, 0, 0.6);
+            min-height: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 5px;
+            background: rgba(0, 0, 0, 0.06);
+            border-radius: 10px;
+            margin-top: 12px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #25f4ee, #fe2c55);
+            border-radius: 10px;
+            transition: width 0.4s ease;
+        }
+
+        /* --- FOOTER GLASS --- */
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: rgba(0, 0, 0, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Latar Belakang Beranimasi (Shapes & Light) -->
+    <div class="ambient-background">
+        <div class="ambient-light light-1"></div>
+        <div class="ambient-light light-2"></div>
+        <div class="ambient-light light-3"></div>
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <!-- Kartu Utama UI Glassmorphism -->
+    <main class="glass-card">
+        <div class="badge-wrapper">
+            <div class="author-badge">
+                <span class="dot-pulse"></span> Built by Apis
+            </div>
+        </div>
+
+        <h1 class="main-title">TikTok Quality</h1>
+        <p class="subtitle">Bypass kompresi TikTok ke 1080p 60FPS tanpa re-encoding</p>
+
+        <form id="enhanceForm">
+            <div class="drop-zone" id="dropZone">
+                <div class="upload-icon">✦</div>
+                <div class="drop-text" id="dropText">Klik atau seret file <b>.MP4</b> ke sini</div>
+                <div class="file-name" id="fileName"></div>
+                <input type="file" id="videoInput" accept="video/mp4" required>
+            </div>
+
+            <button type="submit" class="btn-submit" id="submitBtn">
+                <span class="spinner" id="spinner"></span>
+                <span id="btnText">Proses Video</span>
+            </button>
+        </form>
+
+        <div class="progress-bar-container" id="progressContainer">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div class="status-container" id="statusMessage"></div>
+
+        <footer class="card-footer">
+            <span>By Apis</span>
+            <span>•</span>
+            <span>60 FPS Unlock</span>
+        </footer>
+    </main>
+
+    <script>
+        const videoInput = document.getElementById('videoInput');
+        const fileNameDiv = document.getElementById('fileName');
+        const dropText = document.getElementById('dropText');
+        const dropZone = document.getElementById('dropZone');
+        const form = document.getElementById('enhanceForm');
+        const statusMessage = document.getElementById('statusMessage');
+        const submitBtn = document.getElementById('submitBtn');
+        const btnText = document.getElementById('btnText');
+        const spinner = document.getElementById('spinner');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.getElementById('progressBar');
+
+        // Menampilkan Nama File ketika Dipilih
+        videoInput.addEventListener('change', () => {
+            if (videoInput.files.length > 0) {
+                fileNameDiv.innerText = videoInput.files[0].name;
+                dropText.style.display = 'none';
+            }
+        });
+
+        // Effect Drag & Drop Interaktif
+        ['dragover', 'dragenter'].forEach(eventName => {
+            dropZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                dropZone.classList.add('dragover');
+            });
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('dragover');
+            });
+        });
+
+        // Proses Form & Animasi Loading
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!videoInput.files.length) return;
+
+            const formData = new FormData();
+            formData.append('file', videoInput.files[0]);
+
+            // Set State UI Loading
+            submitBtn.disabled = true;
+            spinner.style.display = 'inline-block';
+            btnText.innerText = 'Memproses...';
+            statusMessage.innerText = "Sedang memproses metadata video...";
+            progressContainer.style.display = 'block';
+            
+            // Animasi Progress Bar buatan
+            let progress = 10;
+            progressBar.style.width = progress + '%';
+            const progressInterval = setInterval(() => {
+                if (progress < 85) {
+                    progress += Math.floor(Math.random() * 8) + 2;
+                    progressBar.style.width = progress + '%';
+                }
+            }, 300);
+
+            try {
+                const response = await fetch('/api/enhance', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                clearInterval(progressInterval);
+
+                if (!response.ok) {
+                    const data = await response.json().catch(() => null);
+                    const errDetail = data && data.detail ? data.detail : "Gagal memproses video.";
+                    throw new Error(errDetail);
+                }
+
+                progressBar.style.width = '100%';
+
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `HD_${videoInput.files[0].name}`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+
+                statusMessage.innerText = "✨ Selesai! Video HD otomatis diunduh.";
+            } catch (err) {
+                clearInterval(progressInterval);
+                progressBar.style.width = '0%';
+                statusMessage.innerText = "❌ Error: " + err.message;
+            } finally {
+                submitBtn.disabled = false;
+                spinner.style.display = 'none';
+                btnText.innerText = 'Proses Video';
+                setTimeout(() => {
+                    progressContainer.style.display = 'none';
+                    progressBar.style.width = '0%';
+                }, 2000);
+            }
+        });
+    </script>
+</body>
+</html>
