@@ -8,7 +8,6 @@ try:
 except ImportError:
     transform = None
 
-# Ubah layout menjadi 'wide' agar memenuhi layar
 st.set_page_config(
     page_title="TikTok Quality — Y2K Retro",
     page_icon="💾",
@@ -48,7 +47,6 @@ st.markdown("""
 
         #MainMenu, header, footer {visibility: hidden !important;}
 
-        /* --- Kontainer Lebar & Responsif untuk Laptop & HP --- */
         .block-container {
             width: 92% !important;
             max-width: 900px !important;
@@ -141,6 +139,13 @@ st.markdown("""
             color: #ff99ff !important;
         }
 
+        /* --- ANIMASI TOMBOL Y2K RETRO --- */
+        @keyframes pulseGlow {
+            0% { box-shadow: 4px 4px 0px #ff007f; }
+            50% { box-shadow: 6px 6px 12px #00ffcc, 4px 4px 0px #ff007f; }
+            100% { box-shadow: 4px 4px 0px #ff007f; }
+        }
+
         div.stButton > button, div.stLinkButton > a, div.stDownloadButton > button {
             width: 100% !important;
             margin-top: 16px !important;
@@ -156,14 +161,15 @@ st.markdown("""
             text-decoration: none !important;
             box-shadow: 4px 4px 0px #ff007f !important;
             display: block !important;
-            transition: none !important;
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            animation: pulseGlow 3s infinite;
         }
 
         div.stButton > button:hover, div.stLinkButton > a:hover, div.stDownloadButton > button:hover {
             background: #ff007f !important;
             color: #ffffff !important;
-            box-shadow: 4px 4px 0px #00ffcc !important;
-            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px #00ffcc !important;
+            transform: translate(-3px, -3px) !important;
         }
         
         div.stButton > button:active, div.stLinkButton > a:active, div.stDownloadButton > button:active {
@@ -175,7 +181,7 @@ st.markdown("""
 
 st.markdown("""
     <div>
-        <span class="y2k-tag">💾 SYSTEM_READY // WIDE_MODE</span>
+        <span class="y2k-tag">💾 SYSTEM_READY // ANIMATED_UI</span>
     </div>
 """, unsafe_allow_html=True)
 
